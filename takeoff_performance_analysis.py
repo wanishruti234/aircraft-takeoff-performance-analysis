@@ -7,11 +7,21 @@ This project investigates the influence of runway length, runway elevation,
 ambient temperature, wing loading, and thrust-to-weight ratio on aircraft
 take-off performance using the ADRpy library.
 """
+
+# ==========================================================
+# Import Required Libraries
+# ==========================================================
+
 from ADRpy import atmospheres as at
 from ADRpy import constraintanalysis as ca
 import numpy as np
 import matplotlib.pyplot as plt
 from ADRpy import unitconversions as co
+
+# ==========================================================
+# Aircraft Design Parameters
+# ==========================================================
+
 designatm = at.Atmosphere()
 designbrief = {"groundrun_m":60}
 designdefinition = {"aspectratio" : 9, "bpr":1}
@@ -19,11 +29,26 @@ designperformance = {"CDTO":0.0898, "CLTO":0.97, "CLmaxID":1.7, "mu_R":0.08}
 concept = ca.AircraftConcept(designbrief, designdefinition, designperformance, designatm )
 wingloadinglist_pa = np.arange(80,250,1)
 twratio, liftoffspeed_mps = concept.thrusttoweight_takeoff(wingloadinglist_pa)
+plt.plot(wingloadinglist_pa, twratio)
+plt.ylabel("T/W")
+plt.xlabel("W/S(N/m$^2$)")
+plt.title("Minimum thrust to weight ratio required")
+plt.grid(True)
+
+# ==========================================================
+# Lift-Off Speed Analysis
+# ==========================================================
+
 plt.plot(wingloadinglist_pa, liftoffspeed_mps)
 plt.ylabel("$V_\mathrm{L}$(m/s)")
 plt.xlabel("W/S(N/m$^2$)")
 plt.title("Lift-off speed as a function of wing loading")
 plt.grid(True)
+
+# ==========================================================
+# Runway Length Sensitivity Analysis
+# ==========================================================
+
 for groundrun_m in [20, 30, 40, 50, 60, 70, 80, 90]:
     designbrief = {"groundrun_m": groundrun_m}
     concept = ca.AircraftConcept(designbrief, designdefinition, designperformance, designatm )
@@ -36,6 +61,11 @@ plt.xlabel("W/S(N/m$^2$)")
 plt.title("Sensitivity of Minimum thrust to weight ratio required for takeoff")
 plt.grid(True)
 designbrief = {"groundrun_m": 30}
+
+# ==========================================================
+# Runway Elevation Sensitivity Analysis
+# ==========================================================
+
 for elevation_ft in [0, 1000, 2000, 3000, 4000, 5000]:
     designbrief = {"groundrun_m": 30, "rwyelevation_m": co.feet2m(elevation_ft)}
     concept = ca.AircraftConcept(designbrief, designdefinition, designperformance, designatm )
@@ -48,6 +78,11 @@ plt.xlabel("W/S(N/m$^2$)")
 plt.title("Sensitivity of Minimum thrust to weight ratio wrt runway elevation")
 plt.grid(True)
 designbrief = {"groundrun_m": 30, "rwyelevation_m": 0}
+
+# ==========================================================
+# Ambient Temperature Sensitivity Analysis
+# ==========================================================
+
 for tmp_offset_deg in [-20, -10, 0, 10, 20, 30, 40]:
     designatm = at. Atmosphere (offset_deg = tmp_offset_deg)
     designbrief = {"groundrun_m": groundrun_m}
@@ -64,6 +99,11 @@ plt.ylabel("T/W")
 plt.xlabel("W/S(N/m$^2$)")
 plt.title("Sensitivity of Minimum thrust to weight ratio wrt ambient temperature")
 plt.grid(True)
+
+# ==========================================================
+# Power-to-Weight Analysis
+# ==========================================================
+
 designdefinition = {"aspectratio":9, "bpr": -1}
 etap = {"takeoff":0.6, "climb": 0.75, "cruise": 0.85, "turn": 0.85, "servceil": 0.6}
 designperformance = {"CDTO":0.0898, "CLTO":0.97, "CLmaxID":1.7, "mu_R":0.08, "etaprop": etap}
@@ -79,7 +119,7 @@ for elevation_ft in [0, 1000, 2000, 3000, 4000, 5000]:
 legend = plt.legend(loc = "upper left", fontsize = "medium")
 plt.ylabel("p/W (W/N)")
 plt.xlabel("W/S(N/m$^2$)")
-plt.title("Sensitivity of Minimum thrust to weight ratio required for takeoff")
+plt.title("Sensitivity of Minimum power to weight ratio ")
 plt.grid(True)
 designbrief = {"rwyelevation": 1000, "groundrun_m": 1200}
 designdefinition = {"aspectratio":7.3, "bpr": 3.9, "tr": 1.05}
@@ -97,6 +137,10 @@ mach = designatm.mach(liftoffspeed_mps, designbrief["rwyelevation_m"])
 throttleratio = designdefinition['tr']
 
 correctionvec = []
+
+# ==========================================================
+# Thrust Correction Analysis
+# ==========================================================
 
 for i, tw in enumerate (twratio):
     twratio_altcorr = at.turbofanthrustfactor(temp_c, pressure_pa, mach[i], throttleratio, "lowbpr") 
