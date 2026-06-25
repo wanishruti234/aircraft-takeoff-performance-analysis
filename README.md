@@ -1,10 +1,22 @@
 # Aircraft Take-Off Performance Analysis Using ADRpy
 
+Aircraft take-off performance is one of the primary considerations during preliminary aircraft design.
+
+This project uses ADRpy to perform sensitivity analyses on aircraft take-off performance by evaluating the influence of runway length, runway elevation, ambient temperature, wing loading, and propulsion parameters.
+
 ## Overview
 
 This project investigates aircraft take-off performance using the ADRpy library in Python. The analysis evaluates the effects of runway length, runway elevation, ambient temperature, wing loading, and thrust-to-weight ratio on aircraft take-off performance through sensitivity studies.
 
 ---
+
+## Project Highlights
+
+- Python-based aircraft performance analysis
+- ADRpy implementation for preliminary aircraft design
+- Seven engineering performance plots
+- Sensitivity analysis of runway and atmospheric conditions
+- Wing loading and thrust-to-weight trade-off studies
 
 ## Objectives
 
