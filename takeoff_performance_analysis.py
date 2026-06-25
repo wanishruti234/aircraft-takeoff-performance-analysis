@@ -1,3 +1,12 @@
+"""
+Aircraft Take-Off Performance Analysis using ADRpy
+
+Author: Shruti Jaykumar Wani
+
+This project investigates the influence of runway length, runway elevation,
+ambient temperature, wing loading, and thrust-to-weight ratio on aircraft
+take-off performance using the ADRpy library.
+"""
 from ADRpy import atmospheres as at
 from ADRpy import constraintanalysis as ca
 import numpy as np
@@ -64,7 +73,7 @@ for elevation_ft in [0, 1000, 2000, 3000, 4000, 5000]:
     concept = ca.AircraftConcept(designbrief, designdefinition, designperformance, designatm )
     gffactor = at.pistonpowerfactor(designatm.airdens_kgpm3(co.feet2m(elevation_ft)))
     twratio, liftoffspeed_mps = concept.thrusttoweight_takeoff(wingloadinglist_pa)
-    pwratio = (1/gffactor)*ca.tw2pw(twratio, liftoffspeed_mps, etap["take-off"])
+    pwratio = (1/gffactor)*ca.tw2pw(twratio, liftoffspeed_mps, etap["takeoff"])
     plt.plot(wingloadinglist_pa, pwratio, label = str(elevation_ft) + "ft")
 
 legend = plt.legend(loc = "upper left", fontsize = "medium")
